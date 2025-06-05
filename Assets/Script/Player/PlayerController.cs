@@ -19,6 +19,9 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions inputActions;
     public MobileJoystick joystick;
 
+    private bool isAutoMode = false;
+    public bool IsAutoMode => isAutoMode;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -34,11 +37,18 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if ((currentState == EPlayerState.AutoMove || currentState == EPlayerState.AutoAttack) && moveInput.magnitude > 0f)
+        if (ChatUIController.Instance != null && ChatUIController.Instance.IsChatFocused)
+            return;
+
+        if (isAutoMode && moveInput.magnitude > 0f && (currentState == EPlayerState.AutoMove || currentState == EPlayerState.AutoAttack))
         {
             SetState(EPlayerState.Move);
         }
 
+        if (isAutoMode && currentState == EPlayerState.Move && moveInput.magnitude == 0f)
+        {
+            SetState(EPlayerState.AutoMove);
+        }
 
         switch (currentState)
         {
@@ -165,6 +175,20 @@ public class PlayerController : MonoBehaviour
         if (enemyController != null)
         {
             enemyController.TakeDamage(10);
+        }
+    }
+
+    public void SetAutoMode(bool isAuto)
+    {
+        isAutoMode = isAuto;
+
+        if (isAuto)
+        {
+            SetState(EPlayerState.AutoMove);
+        }
+        else
+        {
+            SetState(EPlayerState.Idle);
         }
     }
 }
