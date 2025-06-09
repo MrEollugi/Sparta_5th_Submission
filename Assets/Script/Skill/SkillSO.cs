@@ -63,6 +63,8 @@ public class DamageReductionPassiveSO : PassiveEffectSO
     public float duration = 5f;
     public float reductionPercent = 0.3f;
 
+    public int triggerCount;
+
     public override void Apply(PlayerStatus status)
     {
         status.ApplyTemporaryDamageReduction(reductionPercent, duration, triggerCount);
