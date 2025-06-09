@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,10 +36,37 @@ public class InventoryUI : MonoBehaviour
     private List<InventorySlotUI> spawnedSlots = new();
     private EItemType currentTab = EItemType.Consumable;
 
+    private PlayerInputActions inputActions;
+
     private void OnDestroy()
     {
         if (GoldManager.Instance != null)
             GoldManager.Instance.OnGoldChanged -= UpdateGoldUI;
+    }
+
+    private void OnEnable()
+    {
+        if(inputActions == null)
+        {
+            inputActions = new PlayerInputActions();
+        }
+
+        inputActions.UI.Cancel.performed += ctx => OnCancel();
+        inputActions.UI.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.UI.Cancel.performed -= ctx => OnCancel();
+        inputActions.UI.Disable();
+    }
+
+    private void OnCancel()
+    {
+        if (gameObject.activeSelf)
+        {
+            CloseInventory();
+        }
     }
 
     private void Start()
@@ -136,5 +164,10 @@ public class InventoryUI : MonoBehaviour
         {
             itemDetailPanel.Show(new InventoryItemData(item), equippedConsumableIcon.transform.position);
         }
+    }
+
+    public void CloseInventory()
+    {
+        gameObject.SetActive(false);
     }
 }
