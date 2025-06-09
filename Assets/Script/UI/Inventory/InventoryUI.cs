@@ -19,7 +19,6 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private ItemDetailPanel itemDetailPanel;
 
     [SerializeField] private GameObject characterSection;
-    [SerializeField] private GameObject equippedConsumableIndicator;
 
     [Header("Equipments")]
     [SerializeField] private Image equippedWeaponIcon;
@@ -90,9 +89,6 @@ public class InventoryUI : MonoBehaviour
     private void SwitchTab(EItemType tab)
     {
         currentTab = tab;
-
-        characterSection.SetActive(tab == EItemType.Equipment);
-        equippedConsumableIndicator.SetActive(tab == EItemType.Consumable);
 
         RefreshUI();
     }
