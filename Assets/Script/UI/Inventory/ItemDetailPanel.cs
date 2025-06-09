@@ -49,11 +49,46 @@ public class ItemDetailPanel : MonoBehaviour
         enhanceButton.onClick.RemoveAllListeners();
         sellButton.onClick.RemoveAllListeners();
 
-        equipButton.onClick.AddListener(() =>
+        if (currentData.itemSO is ConsumableSO consumable)
         {
-            EquipmentManager.Instance.Equip((EquipmentSO)currentData.itemSO);
-            Hide();
-        });
+            equipButton.gameObject.SetActive(true);
+            equipButton.GetComponentInChildren<TMP_Text>().text = QuickItemManager.Instance.EquippedQuickItem == consumable ? "Unequip" : "Equip";
+
+            equipButton.onClick.AddListener(() =>
+            {
+                if (QuickItemManager.Instance.EquippedQuickItem == consumable)
+                {
+                    QuickItemManager.Instance.ClearQuickItem();
+                }
+                else
+                {
+                    QuickItemManager.Instance.EquipQuickItem(consumable);
+                }
+
+                Hide();
+            });
+        }
+        else if (currentData.itemSO is EquipmentSO equipment)
+        {
+            equipButton.gameObject.SetActive(true);
+            EquipmentSO equipped = EquipmentManager.Instance.GetEquippedItem(equipment.slotType);
+            equipButton.GetComponentInChildren<TMP_Text>().text =
+                equipped == equipment ? "Unequip" : "Equip";
+
+            equipButton.onClick.AddListener(() =>
+            {
+                if (equipped == equipment)
+                    EquipmentManager.Instance.Unequip(equipment.slotType);
+                else
+                    EquipmentManager.Instance.Equip(equipment);
+
+                Hide();
+            });
+        }
+        else
+        {
+            equipButton.gameObject.SetActive(false);
+        }
 
         enhanceButton.onClick.AddListener(() =>
         {
@@ -67,6 +102,8 @@ public class ItemDetailPanel : MonoBehaviour
             Hide();
         });
     }
+
+
 
     public void Hide()
     {
