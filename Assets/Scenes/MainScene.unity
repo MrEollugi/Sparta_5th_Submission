@@ -5121,7 +5121,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 862586660605215911, guid: f900dadb9f7693b4790dc5a19d8f5f02, type: 3}
   m_PrefabInstance: {fileID: 8033582429002954074}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8033582429002954075}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7af1a64880573e4f8231b6e5fb72ec0, type: 3}
@@ -6158,32 +6158,19 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4488074366599654469, guid: f900dadb9f7693b4790dc5a19d8f5f02, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8033582429002954076}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f900dadb9f7693b4790dc5a19d8f5f02, type: 3}
---- !u!1 &8033582429002954075 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4488074366599654469, guid: f900dadb9f7693b4790dc5a19d8f5f02, type: 3}
+--- !u!114 &8033582429002954076 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1041561012365374698, guid: f900dadb9f7693b4790dc5a19d8f5f02, type: 3}
   m_PrefabInstance: {fileID: 8033582429002954074}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8033582429002954076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8033582429002954075}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ab1acf883dea5c4197bc4f14e7d8d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 100
-  attack: 20
-  defense: 10
-  equippedArmorSkill: {fileID: 0}
 --- !u!1001 &8296661843936373062
 PrefabInstance:
   m_ObjectHideFlags: 0

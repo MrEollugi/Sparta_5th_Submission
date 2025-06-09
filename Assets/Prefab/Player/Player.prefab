@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1002641939290623434}
   - component: {fileID: 862586660605215911}
   - component: {fileID: 7075271860547870120}
+  - component: {fileID: 1041561012365374698}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -51,7 +52,7 @@ MonoBehaviour:
   moveSpeed: 5
   attackInterval: 1.5
   damage: 10
-  joystick: {fileID: 8519292982608695202, guid: 115826a0efd5a0844a4f1db1662ace43, type: 3}
+  joystick: {fileID: 0}
 --- !u!114 &7075271860547870120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,7 +70,23 @@ MonoBehaviour:
   moveSpeed: 5
   attackInterval: 1.5
   damage: 10
-  joystick: {fileID: 8519292982608695202, guid: 115826a0efd5a0844a4f1db1662ace43, type: 3}
+  joystick: {fileID: 0}
+--- !u!114 &1041561012365374698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4488074366599654469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab1acf883dea5c4197bc4f14e7d8d00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 100
+  attack: 20
+  defense: 10
+  equippedArmorSkill: {fileID: 0}
 --- !u!1 &7808527710408144926
 GameObject:
   m_ObjectHideFlags: 0
