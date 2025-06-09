@@ -45,8 +45,16 @@ public abstract class EquipmentSO : ItemSO
 [CreateAssetMenu(menuName = "Item/Weapon")]
 public class WeaponSO : EquipmentSO
 {
+    [Header("Active Skills")]
+    public WeaponActiveSkillSO ultimateSkill;
+    public List<WeaponActiveSkillSO> availableActiveSkills;
+    public List<WeaponActiveSkillSO> equippedActiveSkills;
+
+    [Header("Passive Effects (Unlocked by Upgrade")]
+    public List<PassiveEffectSO> passiveStages;
+
+    [Header("Bonus Stats")]
     public float attackSpeed;
-    public SkillSO weaponSkill;
 }
 
 [CreateAssetMenu(menuName = "Item/Armor")]

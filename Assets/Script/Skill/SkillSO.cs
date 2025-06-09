@@ -23,10 +23,6 @@ public class WeaponActiveSkillSO : SkillSO
     public AudioClip castSound;
 }
 
-public class WeaponPassiveSkillSO : SkillSO
-{
-}
-
 #region Passive Effect SO
 public abstract class PassiveEffectSO : ScriptableObject
 {
