@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventorySlotUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI quantityText;
-    private InventoryItemData currentData;
 
+    private InventoryItemData currentData;
     private InventoryUI inventoryUI;
 
     public void Set(InventoryItemData data, InventoryUI ui)
@@ -24,9 +22,6 @@ public class InventorySlotUI : MonoBehaviour
 
     public void OnClick()
     {
-        if(currentData != null && inventoryUI != null)
-        {
-            inventoryUI.ShowDetail(currentData);
-        }
+        ItemDetailPanel.Instance.Show(currentData, transform.position);
     }
 }

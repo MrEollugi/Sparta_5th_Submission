@@ -8,6 +8,7 @@ public class TopRightUI : MonoBehaviour
     [SerializeField] private Button menuButton;
     [SerializeField] private Button bagButton;
     [SerializeField] private Button characterButton;
+    [SerializeField] private GameObject inventoryPanel;
 
     private void Start()
     {
@@ -23,7 +24,7 @@ public class TopRightUI : MonoBehaviour
 
     void OpenInventory()
     {
-        Debug.Log("가방 열림");
+        inventoryPanel.SetActive(!inventoryPanel.activeSelf);
     }
 
     void OpenCharacterInfo()

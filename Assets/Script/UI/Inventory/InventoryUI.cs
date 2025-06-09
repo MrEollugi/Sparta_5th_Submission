@@ -16,6 +16,9 @@ public class InventoryUI : MonoBehaviour
     [Header("Detail Panel")]
     [SerializeField] private ItemDetailPanel itemDetailPanel;
 
+    [SerializeField] private GameObject characterSection;
+    [SerializeField] private GameObject equippedConsumableIndicator;
+
     private List<InventorySlotUI> spawnedSlots = new();
     private EItemType currentTab = EItemType.Consumable;
 
@@ -30,6 +33,10 @@ public class InventoryUI : MonoBehaviour
     private void SwitchTab(EItemType tab)
     {
         currentTab = tab;
+
+        characterSection.SetActive(tab == EItemType.Equipment);
+        equippedConsumableIndicator.SetActive(tab == EItemType.Consumable);
+
         RefreshUI();
     }
     
@@ -50,9 +57,9 @@ public class InventoryUI : MonoBehaviour
         itemDetailPanel.Hide();
     }
 
-    public void ShowDetail(InventoryItemData itemData)
+    public void ShowDetail(InventoryItemData itemData, Vector3 worldPosition)
     {
-        itemDetailPanel.Show(itemData);
+        itemDetailPanel.Show(itemData, worldPosition);
     }
 
 }
