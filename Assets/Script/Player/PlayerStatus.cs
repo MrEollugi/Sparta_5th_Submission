@@ -13,7 +13,6 @@ public class PlayerStatus : MonoBehaviour
 
     [Header("Equipped Passive Skills")]
     public ArmorPassiveSkillSO equippedArmorSkill;
-    public AccessoryPassiveSkillSO equippedAccessorySkill;
 
     private void Awake()
     {
@@ -47,14 +46,6 @@ public class PlayerStatus : MonoBehaviour
         if(equippedArmorSkill != null)
         {
             foreach(var effect in equippedArmorSkill.passiveEffects)
-            {
-                effect.OnEventTriggered(this);
-            }
-        }
-
-        if(equippedAccessorySkill != null)
-        {
-            foreach(var effect in equippedAccessorySkill.passiveEffects)
             {
                 effect.OnEventTriggered(this);
             }

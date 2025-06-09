@@ -79,10 +79,3 @@ public class ArmorPassiveSkillSO : SkillSO
     public List<PassiveEffectSO> passiveEffects;
 }
 #endregion
-
-[CreateAssetMenu(menuName = "Skill/AccessoryPassiveSkill")]
-public class AccessoryPassiveSkillSO : SkillSO
-{
-    public float critChance;
-    public float movementSpeedBonus;
-}
