@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Transform target;
 
-    // Update is called once per frame
-    void Update()
+    private Vector3 offset = new Vector3(0f, 8f, -8f);
+    private Quaternion fixedRotation = Quaternion.Euler(40f, 0f, 0f);
+
+    private void LateUpdate()
     {
-        
+        if (target == null) return;
+
+        transform.position = target.position + offset;
+        transform.rotation = fixedRotation;
     }
 }
