@@ -35,12 +35,29 @@ public class ConsumableSO : ItemSO
     public float duration;
 }
 
+#region Upgrade Data
+[System.Serializable]
+public class UpgradeData
+{
+    public int level;
+    public int cost;
+    public float successRate;
+}
+#endregion
+
+
 public abstract class EquipmentSO : ItemSO
 {
     public EquipmentSlotType slotType;
     public int bonusAttack;
     public int bonusDefense;
+
+    public int attackPerLevel = 1;
+    public int defensePerLevel = 2;
+
+    public List<UpgradeData> upgradeLevels;
 }
+
 
 [CreateAssetMenu(menuName = "Item/Weapon")]
 public class WeaponSO : EquipmentSO
@@ -62,6 +79,8 @@ public class ArmorSO : EquipmentSO
 {
     public int bonusHP;
     public float damageReduction;
+
+    public int hpPerLevel = 5;
 }
 
 [CreateAssetMenu(menuName = "Item/Accessory")]

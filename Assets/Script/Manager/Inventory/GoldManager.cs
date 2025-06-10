@@ -8,6 +8,8 @@ public class GoldManager : MonoBehaviour
 
     public int CurrentGold { get; private set; } = 10000;
 
+    public event System.Action<int> OnGoldChanged;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -30,5 +32,13 @@ public class GoldManager : MonoBehaviour
         OnGoldChanged?.Invoke(CurrentGold);
     }
 
-    public event System.Action<int> OnGoldChanged;
+    public bool SpendGold(int amount)
+    {
+        if (CurrentGold < amount) return false;
+
+        CurrentGold -= amount;
+        OnGoldChanged?.Invoke(CurrentGold);
+        return true;
+    }
+
 }

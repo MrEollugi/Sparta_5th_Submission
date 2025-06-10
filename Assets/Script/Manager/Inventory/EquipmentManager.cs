@@ -8,7 +8,7 @@ public class EquipmentManager : MonoBehaviour
 
     [SerializeField] private PlayerStatus playerStatus;
 
-    private Dictionary<EquipmentSlotType, EquipmentSO> equippedItems = new();
+    private Dictionary<EquipmentSlotType, InventoryItemData> equippedItems = new();
 
     private void Awake()
     {
@@ -25,17 +25,18 @@ public class EquipmentManager : MonoBehaviour
         }
     }
 
-    public void Equip(EquipmentSO newEquip)
+    public void Equip(InventoryItemData itemData)
     {
-        EquipmentSlotType slot = newEquip.slotType;
+        var equip = itemData.itemSO as EquipmentSO;
+        var slot = equip.slotType;
 
-        if(equippedItems[slot] != null)
+        if (equippedItems[slot] != null)
         {
             Unequip(slot);
         }
 
-        equippedItems[slot] = newEquip;
-        ApplyStats(newEquip);
+        equippedItems[slot] = itemData;
+        ApplyStats(itemData);
     }
 
     public void Unequip(EquipmentSlotType slot)
@@ -48,32 +49,39 @@ public class EquipmentManager : MonoBehaviour
 
     public EquipmentSO GetEquippedItem(EquipmentSlotType slot)
     {
+        return equippedItems[slot]?.itemSO as EquipmentSO;
+    }
+
+    public InventoryItemData GetEquippedItemData(EquipmentSlotType slot)
+    {
         return equippedItems[slot];
     }
 
-    private void ApplyStats(EquipmentSO equipment)
+    private void ApplyStats(InventoryItemData itemData)
     {
-        if (equipment == null) return;
+        var equip = itemData.itemSO as EquipmentSO;
+        int level = itemData.upgradeLevel;
 
-        playerStatus.attack += equipment.bonusAttack;
-        playerStatus.defense += equipment.bonusDefense;
+        playerStatus.attack += EquipmentStatCalculator.GetAttack(equip, level);
+        playerStatus.defense += EquipmentStatCalculator.GetDefense(equip, level);
 
-        if(equipment is ArmorSO armor)
+        if (equip is ArmorSO armor)
         {
-            playerStatus.maxHP += armor.bonusHP;
+            playerStatus.maxHP += armor.bonusHP + level * armor.hpPerLevel;
         }
     }
 
-    private void RemoveStats(EquipmentSO equipment)
+    private void RemoveStats(InventoryItemData itemData)
     {
-        if (equipment == null) return;
+        var equip = itemData.itemSO as EquipmentSO;
+        int level = itemData.upgradeLevel;
 
-        playerStatus.attack -= equipment.bonusAttack;
-        playerStatus.defense -= equipment.bonusDefense;
+        playerStatus.attack -= EquipmentStatCalculator.GetAttack(equip, level);
+        playerStatus.defense -= EquipmentStatCalculator.GetDefense(equip, level);
 
-        if (equipment is ArmorSO armor)
+        if (equip is ArmorSO armor)
         {
-            playerStatus.maxHP -= armor.bonusHP;
+            playerStatus.maxHP -= armor.bonusHP + level * armor.hpPerLevel;
         }
     }
 }

@@ -71,16 +71,20 @@ public class ItemDetailPanel : MonoBehaviour
         else if (currentData.itemSO is EquipmentSO equipment)
         {
             equipButton.gameObject.SetActive(true);
-            EquipmentSO equipped = EquipmentManager.Instance.GetEquippedItem(equipment.slotType);
-            equipButton.GetComponentInChildren<TMP_Text>().text =
-                equipped == equipment ? "Unequip" : "Equip";
+
+            InventoryItemData equipped = EquipmentManager.Instance.GetEquippedItemData(equipment.slotType);
+            bool isEquipped = equipped != null &&
+                              equipped.itemSO == equipment &&
+                              equipped.upgradeLevel == currentData.upgradeLevel;
+
+            equipButton.GetComponentInChildren<TMP_Text>().text = isEquipped ? "Unequip" : "Equip";
 
             equipButton.onClick.AddListener(() =>
             {
-                if (equipped == equipment)
+                if (isEquipped)
                     EquipmentManager.Instance.Unequip(equipment.slotType);
                 else
-                    EquipmentManager.Instance.Equip(equipment);
+                    EquipmentManager.Instance.Equip(currentData);
 
                 Hide();
             });
