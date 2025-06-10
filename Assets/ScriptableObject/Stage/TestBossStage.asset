@@ -16,7 +16,7 @@ MonoBehaviour:
   stageID: 1
   dungeonType: 3
   enemyList:
-  - enemySO: {fileID: 0}
+  - enemySO: {fileID: 11400000, guid: 8874677dbf5332242b3dbe6488924763, type: 2}
     spawnPosition: {x: 0, y: 0, z: 0}
     delay: 0
   requiredLevel: 1
