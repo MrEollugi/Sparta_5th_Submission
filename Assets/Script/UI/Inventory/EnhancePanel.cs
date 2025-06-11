@@ -4,10 +4,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// UI panel for enhancing equipment. Displays current level, cost, and success rate,
+// and handles interaction with the EnhanceManager.
 public class EnhancePanel : MonoBehaviour
 {
+    #region Singleton
     public static EnhancePanel Instance { get; private set; }
+    #endregion
 
+    #region UI References
     [Header("UI References")]
     [SerializeField] private TMP_Text itemNameText;
     [SerializeField] private TMP_Text upgradeLevelText;
@@ -15,9 +20,11 @@ public class EnhancePanel : MonoBehaviour
     [SerializeField] private TMP_Text successRateText;
     [SerializeField] private Button enhanceButton;
     [SerializeField] private TMP_Text resultText;
+    #endregion
 
     private InventoryItemData currentData;
 
+    #region Unity Events
     private void Awake()
     {
         Instance = this;
@@ -28,7 +35,10 @@ public class EnhancePanel : MonoBehaviour
             EnhanceManager.Instance.TryEnhance(currentData);
         });
     }
+    #endregion
 
+    #region Public Methods
+    // Displays the panel and initializes the UI with the given equipment data.
     public void Show(InventoryItemData itemData)
     {
         currentData = itemData;
@@ -37,6 +47,7 @@ public class EnhancePanel : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    // Refreshes the UI elements based on the current item's upgrade level.
     public void Refresh()
     {
         EquipmentSO equip = currentData.itemSO as EquipmentSO;
@@ -60,6 +71,7 @@ public class EnhancePanel : MonoBehaviour
         }
     }
 
+    // Displays the result of the enhancement attempt.
     public void ShowResult(bool success, int newLevel)
     {
         if (success)
@@ -67,4 +79,5 @@ public class EnhancePanel : MonoBehaviour
         else
             resultText.text = $"<color=red>강화 실패...</color>";
     }
+    #endregion
 }

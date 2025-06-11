@@ -4,10 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+#region Item Detail Panel
+// Displays detailed information about an inventory item and provides interaction buttons
+// such as Equip, Enhance, and Sell.
 public class ItemDetailPanel : MonoBehaviour
 {
+    #region Singleton
     public static ItemDetailPanel Instance { get; private set; }
+    #endregion
 
+    #region UI References
     [SerializeField] private RectTransform panelRect;
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text nameText;
@@ -16,15 +22,24 @@ public class ItemDetailPanel : MonoBehaviour
     [SerializeField] private Button equipButton;
     [SerializeField] private Button enhanceButton;
     [SerializeField] private Button sellButton;
+    #endregion
 
+    #region State
     private InventoryItemData currentData;
+    #endregion
 
+    #region Unity Events
     private void Awake()
     {
         Instance = this;
         gameObject.SetActive(false);
     }
+    #endregion
 
+    #region Panel Logic
+    // Show the detail panel for the given item at the specified world position.
+    // data = item data to display.
+    // worldPosition = Position to placee the panel near the cursor.
     public void Show(InventoryItemData data, Vector3 worldPosition)
     {
         currentData = data;
@@ -33,12 +48,13 @@ public class ItemDetailPanel : MonoBehaviour
         nameText.text = data.itemSO.itemName;
         descriptionText.text = data.itemSO.description;
 
-        transform.position = worldPosition + new Vector3(100f, -50f);
+        transform.position = worldPosition + new Vector3(100f, -50f);   // Offset for readability
         gameObject.SetActive(true);
 
         SetupActionButtons();
     }
 
+    // Set up functionality of Equip / Enhance / Sell buttons based on item type.
     private void SetupActionButtons()
     {
         equipButton.gameObject.SetActive(currentData.itemSO is EquipmentSO);
@@ -49,6 +65,7 @@ public class ItemDetailPanel : MonoBehaviour
         enhanceButton.onClick.RemoveAllListeners();
         sellButton.onClick.RemoveAllListeners();
 
+        // Quick item (consumable) equip/unequip
         if (currentData.itemSO is ConsumableSO consumable)
         {
             equipButton.gameObject.SetActive(true);
@@ -68,6 +85,7 @@ public class ItemDetailPanel : MonoBehaviour
                 Hide();
             });
         }
+        // Equipment equip/unequip
         else if (currentData.itemSO is EquipmentSO equipment)
         {
             equipButton.gameObject.SetActive(true);
@@ -94,23 +112,28 @@ public class ItemDetailPanel : MonoBehaviour
             equipButton.gameObject.SetActive(false);
         }
 
+        // Enhance button (placeholder)
         enhanceButton.onClick.AddListener(() =>
         {
             Debug.Log("강화 기능 호출");
             Hide();
         });
 
+        // Sell item
         sellButton.onClick.AddListener(() =>
         {
             InventoryManager.Instance.RemoveItem(currentData.itemSO, 1);
             Hide();
         });
     }
+    #endregion
 
-
-
+    #region Panel Control
+    // Hide the panel.
     public void Hide()
     {
         gameObject.SetActive(false);
     }
+    #endregion
 }
+#endregion

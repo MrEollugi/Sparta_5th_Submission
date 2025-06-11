@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+#region Player Controller
+// Handles player movement, attack input, and AI-controlled auto mode.
+// Uses an FSM approach with states for Idle, Move, AutoMove, and AutoAttack.
 public class PlayerController : MonoBehaviour
 {
+    #region State & Settings
     public EPlayerState currentState;
     private Coroutine attackCoroutine;
 
@@ -13,15 +17,21 @@ public class PlayerController : MonoBehaviour
     public float attackInterval = 1.5f;
     public int damage = 10;
 
-    private Vector2 moveInput;
-    private GameObject target;
-
-    private PlayerInputActions inputActions;
-    public MobileJoystick joystick;
-
     private bool isAutoMode = false;
     public bool IsAutoMode => isAutoMode;
+    #endregion
 
+    #region Input
+    private Vector2 moveInput;
+    private PlayerInputActions inputActions;
+    public MobileJoystick joystick;
+    #endregion
+
+    #region Target
+    private GameObject target;
+    #endregion
+
+    #region Unity Events
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -37,19 +47,23 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // Prevent movement if chat is focused
         if (ChatUIController.Instance != null && ChatUIController.Instance.IsChatFocused)
             return;
 
+        // Handle manual movement override in auto mode
         if (isAutoMode && moveInput.magnitude > 0f && (currentState == EPlayerState.AutoMove || currentState == EPlayerState.AutoAttack))
         {
             SetState(EPlayerState.Move);
         }
 
+        // Resume auto-move if player stops manual input
         if (isAutoMode && currentState == EPlayerState.Move && moveInput.magnitude == 0f)
         {
             SetState(EPlayerState.AutoMove);
         }
 
+        // Main FSM logic
         switch (currentState)
         {
             case EPlayerState.Idle:
@@ -70,12 +84,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
-    void HandleIdle()
-    {
-
-    }
-
+    #region Manual Movement
     void HandleManualMove()
     {
         Vector2 input = joystick != null ? joystick.InputDirection : moveInput;
@@ -91,7 +102,9 @@ public class PlayerController : MonoBehaviour
             SetState(EPlayerState.Idle);
         }
     }
+    #endregion
 
+    #region Manual Attack
     void TryAttack()
     {
         if (currentState == EPlayerState.Move || currentState == EPlayerState.Idle)
@@ -107,7 +120,9 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Auto Mode Logic
     void HandleAutoMove()
     {
         transform.Translate(Vector3.forward * Time.deltaTime * 2f);
@@ -138,22 +153,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SetState(EPlayerState newState)
-    {
-        if (currentState == EPlayerState.AutoAttack && attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-        }
-
-        currentState = newState;
-    }
-
     IEnumerator AutoAttackRoutine()
     {
         while (currentState == EPlayerState.AutoAttack && target != null)
         {
-            // 타겟과 거리 확인
             float dist = Vector3.Distance(transform.position, target.transform.position);
             if (dist > detectRange)
             {
@@ -163,12 +166,14 @@ public class PlayerController : MonoBehaviour
             }
 
             AttackTarget(target);
-            yield return new WaitForSeconds(1.5f); // 공격 간격
+            yield return new WaitForSeconds(1.5f);
         }
 
         SetState(EPlayerState.AutoMove);
     }
+    #endregion
 
+    #region Combat
     void AttackTarget(GameObject enemy)
     {
         var enemyController = enemy.GetComponent<EnemyController>();
@@ -176,6 +181,19 @@ public class PlayerController : MonoBehaviour
         {
             enemyController.TakeDamage(10);
         }
+    }
+    #endregion
+
+    #region State & Auto Toggle
+    public void SetState(EPlayerState newState)
+    {
+        if (currentState == EPlayerState.AutoAttack && attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+
+        currentState = newState;
     }
 
     public void SetAutoMode(bool isAuto)
@@ -191,4 +209,13 @@ public class PlayerController : MonoBehaviour
             SetState(EPlayerState.Idle);
         }
     }
+    #endregion
+
+    #region Unused
+    //void HandleIdle()
+    //{
+
+    //}
+    #endregion
 }
+#endregion

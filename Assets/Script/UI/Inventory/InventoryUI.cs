@@ -5,19 +5,33 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+#region Inventory UI
+// Handles the inventory screen UI, including tab switching, item listing,
+// equipped item preview, and integration with GoldManager and QuickItemManager.
 public class InventoryUI : MonoBehaviour
 {
+    #region Tab Controls
     [Header("Tab button")]
     [SerializeField] private Button consumableTabButton;
     [SerializeField] private Button equipmentTabButton;
 
+    private EItemType currentTab = EItemType.Consumable;
+    #endregion
+
+    #region Slot Prefabs
     [Header("Slot Prefab & List Parents")]
     [SerializeField] private InventorySlotUI slotPrefab;
     [SerializeField] private Transform slotParent;
 
+    private List<InventorySlotUI> spawnedSlots = new();
+    #endregion
+
+    #region Detail Panel
     [Header("Detail Panel")]
     [SerializeField] private ItemDetailPanel itemDetailPanel;
+    #endregion
 
+    #region Equipped Item Display
     [SerializeField] private GameObject characterSection;
 
     [Header("Equipments")]
@@ -29,18 +43,37 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Image equippedConsumableIcon;
     [SerializeField] private TMP_Text equippedConsumableText;
     [SerializeField] private Sprite emptySprite;
+    #endregion
 
+    #region Gold UI
     [SerializeField] private TextMeshProUGUI goldAmountText;
+    #endregion
 
-    private List<InventorySlotUI> spawnedSlots = new();
-    private EItemType currentTab = EItemType.Consumable;
-
+    #region Input
     private PlayerInputActions inputActions;
+    #endregion
 
-    private void OnDestroy()
+    #region Unity Events
+    private void Start()
     {
-        if (GoldManager.Instance != null)
-            GoldManager.Instance.OnGoldChanged -= UpdateGoldUI;
+        // Tab switching
+        consumableTabButton.onClick.AddListener(() => SwitchTab(EItemType.Consumable));
+        equipmentTabButton.onClick.AddListener(() => SwitchTab(EItemType.Equipment));
+
+        // Equipped item detail handlers
+        equippedWeaponIcon.GetComponent<Button>().onClick.AddListener(ShowEquippedWeaponDetail);
+        equippedArmorIcon.GetComponent<Button>().onClick.AddListener(ShowEquippedArmorDetail);
+        equippedConsumableIcon.GetComponent<Button>().onClick.AddListener(ShowEquippedConsumableDetail);
+
+        // Gold update subscription
+        GoldManager.Instance.OnGoldChanged += UpdateGoldUI;
+        UpdateGoldUI(GoldManager.Instance.CurrentGold);
+
+        // Quick item update subscription
+        QuickItemManager.Instance.OnQuickItemChanged += UpdateQuickItemUI;
+        UpdateQuickItemUI(QuickItemManager.Instance.EquippedQuickItem);
+
+        RefreshUI();
     }
 
     private void OnEnable()
@@ -60,32 +93,14 @@ public class InventoryUI : MonoBehaviour
         inputActions.UI.Disable();
     }
 
-    private void OnCancel()
+    private void OnDestroy()
     {
-        if (gameObject.activeSelf)
-        {
-            CloseInventory();
-        }
+        if (GoldManager.Instance != null)
+            GoldManager.Instance.OnGoldChanged -= UpdateGoldUI;
     }
+    #endregion
 
-    private void Start()
-    {
-        consumableTabButton.onClick.AddListener(() => SwitchTab(EItemType.Consumable));
-        equipmentTabButton.onClick.AddListener(() => SwitchTab(EItemType.Equipment));
-
-        equippedWeaponIcon.GetComponent<Button>().onClick.AddListener(ShowEquippedWeaponDetail);
-        equippedArmorIcon.GetComponent<Button>().onClick.AddListener(ShowEquippedArmorDetail);
-        equippedConsumableIcon.GetComponent<Button>().onClick.AddListener(ShowEquippedConsumableDetail);
-
-        GoldManager.Instance.OnGoldChanged += UpdateGoldUI;
-        UpdateGoldUI(GoldManager.Instance.CurrentGold);
-
-        QuickItemManager.Instance.OnQuickItemChanged += UpdateQuickItemUI;
-        UpdateQuickItemUI(QuickItemManager.Instance.EquippedQuickItem);
-
-        RefreshUI();
-    }
-
+    #region Tab & Slot Handling
     private void SwitchTab(EItemType tab)
     {
         currentTab = tab;
@@ -114,18 +129,9 @@ public class InventoryUI : MonoBehaviour
     {
         itemDetailPanel.Show(itemData, worldPosition);
     }
+    #endregion
 
-    private void UpdateGoldUI(int amount)
-    {
-        goldAmountText.text = $"{amount:N0} G";
-    }
-
-    private void UpdateQuickItemUI(ConsumableSO item)
-    {
-        equippedConsumableIcon.sprite = item ? item.icon : emptySprite;
-        equippedConsumableText.text = item ? item.itemName : "없음";
-    }
-
+    #region Equipped Items UI
     private void UpdateEquippedSlots()
     {
         var weapon = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Weapon);
@@ -161,9 +167,34 @@ public class InventoryUI : MonoBehaviour
             itemDetailPanel.Show(new InventoryItemData(item), equippedConsumableIcon.transform.position);
         }
     }
+    #endregion
+
+    #region UI Updates
+    private void UpdateGoldUI(int amount)
+    {
+        goldAmountText.text = $"{amount:N0} G";
+    }
+
+    private void UpdateQuickItemUI(ConsumableSO item)
+    {
+        equippedConsumableIcon.sprite = item ? item.icon : emptySprite;
+        equippedConsumableText.text = item ? item.itemName : "없음";
+    }
+    #endregion
+
+    #region Exit Handling
+    private void OnCancel()
+    {
+        if (gameObject.activeSelf)
+        {
+            CloseInventory();
+        }
+    }
 
     public void CloseInventory()
     {
         gameObject.SetActive(false);
     }
+    #endregion
 }
+#endregion
